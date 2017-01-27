@@ -10,7 +10,11 @@ val test1b  = all_except_option("delete me", ["abc", "delete me", "efg"])
 val test1c  = all_except_option ("a", ["q", "r", "s"]) = NONE
 
 
-val test2 = get_substitutions1 ([["foo"],["there"]], "foo") = []
+val test2a = get_substitutions1 ([["foo"],["there"]], "foo") = []
+val test2b = get_substitutions1([["Fred","Fredrick"],["Elizabeth",
+         "Betty"],["Freddie","Fred","F"]], "Fred")=["Fredrick","Freddie","F"]
+val test2c =  get_substitutions1([["Fred","Fredrick"],["Jeff","Jeffrey"],
+    ["Geoff","Jeff","Jeffrey"]], "Jeff")=["Jeffrey","Geoff","Jeffrey"]
 
 (*
 val test3 = get_substitutions2 ([["foo"],["there"]], "foo") = []

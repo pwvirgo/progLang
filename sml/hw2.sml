@@ -40,23 +40,15 @@ that are in some list in substitutions that also has s, but s
 itself should not be in the result. Example:
 *)
 
-(* you may assume that Num is always used with values 2, 3, ..., 10
-   though it will not really come up *)
-fun aeo(s: string, sl: string list) =
-       case sl of [] => []
-          | h::sl'  =>  
-             if same_string(s, h) then aeo(s, sl')
-             else h:: aeo(s, sl');
-(*
-val testaeo1  = aeo ("string", ["string"]) =[]
-val testaeo2  = aeo("delete me", ["abc", "delete me", "efg"])
-              = ["abc", "efg"]
-val testaeo3  = aeo ("a", ["q", "r", "s"]) = ["q", "r", "s"];
-*)
-fun get_substitutions1(x: string list list, s: string) = 
-   case x of []::[] => []
-          | head::[tail]  =>  aeo(s, head) @ aeo(s,tail);
+fun get_substitutions1(x: string list list, s: string) =
+     case x of [] => [] 
+          | h::t  => 
+             (case all_except_option(s, h) of NONE  => []
+                  | SOME lst => lst)
+                @ get_substitutions1(t, s);
+ 
 
+(* get_substitutions1([["ALPHA", "dog"], ["big","dog"]], "do"); *)  
 
 (*
 datatype suit = Clubs | Diamonds | Hearts | Spades

@@ -54,16 +54,39 @@ fun get_substitutions2(x: string list list, s: string) =
   let fun gets(x2: string list list, ret: string list) =
       case x2 of [] => ret
           | h::t  => 
-             gets(t, case all_except_option(s, h) of NONE  => []
-                  | SOME lst => lst)
+             gets(t, ret @ (case all_except_option(s, h) of NONE  => []
+                  | SOME lst => lst))
   in
       gets(x, [])
   end;
  
+(* (1d) similar_names takes a string list list of substitutions (as in
+parts (b) and (c)) and a full name of type
+{first:string,middle:string,last:string} and returns a list of full
+names (type {first:string,middle:string,last:string} list). The result
+is all the full names you can produce by substituting for the first
+name (and only the first name) using substitutions and parts (b) or
+(c). The answer should begin with the original name (then have 0 or
+more other names).  *)
 
-(* get_substitutions1([["ALPHA", "dog"], ["big","dog"]], "do"); *)  
+fun similar_names(x: string list list, 
+                  name: {first:string,middle:string,last:string})=
+  case x of [] => [name]
+       | h::t  => 
+         let val all= get_substitutions2(x, 
+               case name of {first=f, middle=_, last=_}=>f)
+             val mid=case name of {first=_, middle=m, last=_}=>m
+             val las=case name of {first=_, middle=_, last=l}=>l
+             fun getem(namelist: string list)= 
+               case namelist of []=>[]
+                  | h::t => {first=h, middle=mid, last=las} ::
+                        getem(t)
+         in
+             name :: getem(all)
+         end;
 
-(*
+                                 
+
 datatype suit = Clubs | Diamonds | Hearts | Spades
 datatype rank = Jack | Queen | King | Ace | Num of int 
 type card = suit * rank
@@ -72,5 +95,28 @@ datatype color = Red | Black
 datatype move = Discard of card | Draw 
 
 exception IllegalMove
-*)
+
+
 (* put your solutions for problem 2 here *)
+(* (2a) Write a function card_color, which takes a card and returns
+its color (spades and clubs are black, diamonds and hearts are
+red). Note: One case-expression is enough. *)
+
+fun card_color(c: card) =
+  case c of (Diamonds, _) =>Red  | (Hearts,_) =>Red 
+                      | _  => Black;
+
+(* (2b) Write a function card_value, which takes a card and returns its
+value (numbered cards have their number as the value, aces are 11,
+everything else is 10). Note: One case-expression is enough. *)
+fun card_value (c: card) =
+  case c of (_, Ace) => 11 | (_, Num a) => a | _  => 10;
+
+(* (2c) Write a function remove_card, which takes a list of cards cs, a
+card c, and an exception e. It returns a list that has all the
+elements of cs except c. If c is in the list more than once, remove
+only the first one. If c is not in the list, raise the exception
+e. You can compare cards with =. *)
+
+fun remove_card (cs: card list, c: card, e: exception)=
+42;

@@ -46,6 +46,19 @@ fun get_substitutions1(x: string list list, s: string) =
              (case all_except_option(s, h) of NONE  => []
                   | SOME lst => lst)
                 @ get_substitutions1(t, s);
+
+(* (1c) Write a function get_substitutions2, which is like
+get_substitutions1 except it uses a tail-recursive local helper
+function. *)
+fun get_substitutions2(x: string list list, s: string) =
+  let fun gets(x2: string list list, ret: string list) =
+      case x2 of [] => ret
+          | h::t  => 
+             gets(t, case all_except_option(s, h) of NONE  => []
+                  | SOME lst => lst)
+  in
+      gets(x, [])
+  end;
  
 
 (* get_substitutions1([["ALPHA", "dog"], ["big","dog"]], "do"); *)  

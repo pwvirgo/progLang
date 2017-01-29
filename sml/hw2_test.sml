@@ -58,11 +58,20 @@ val test7c=remove_card ([(Clubs, Num 5 ),(Hearts, Ace),(Hearts,Ace),
 [(Clubs,Num 6)] - uncaught exception *)
 
 
+val test8a = all_same_color [(Hearts, Ace), (Hearts, Ace)] = true
+val test8b = all_same_color [(Hearts, Ace), (Spades, Ace)] = false
+val test8c = all_same_color [(Hearts, Ace)] = true
+val test8d = all_same_color [] = true
+val test8e = all_same_color [(Hearts,Ace),(Spades,Ace),(Hearts,Ace)]
+                                            = false
+
+val test9a = sum_cards [(Clubs, Num 2),(Clubs, Num 2)] = 4
+val test9b = sum_cards [(Clubs, Ace),(Hearts, Num 2), (Spades, King)] = 23
+val test9c = sum_cards [(Clubs, Num 2)] = 2
+val test9d = sum_cards [] = 0
+
+
 (*
-val test8 = all_same_color [(Hearts, Ace), (Hearts, Ace)] = true
-
-val test9 = sum_cards [(Clubs, Num 2),(Clubs, Num 2)] = 4
-
 val test10 = score ([(Hearts, Num 2),(Clubs, Num 4)],10) = 4
 
 val test11 = officiate ([(Hearts, Num 2),(Clubs, Num 4)],[Draw], 15) = 6

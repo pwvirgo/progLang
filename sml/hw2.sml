@@ -131,37 +131,36 @@ fun remove_card (cs: card list, c: card, e: exn)=
       case getem(cs, 0) of (a,f) =>  if f=0 then raise e else a
   end;
 
-(*
-remove_card ([(Hearts, Ace)], (Hearts, Ace), IllegalMove);
-(* remove_card ([(Hearts, Ace)], (Spades, Ace), IllegalMove) 
-             handle IllegalMove => true; *)
-remove_card ([(Clubs, Num 5),(Hearts, Ace),(Diamonds, Queen)],
-             (Hearts, Ace), IllegalMove) ;
-remove_card ([(Clubs, Num 5 ),(Hearts, Ace),(Hearts,Ace),
-              (Diamonds, Queen)], (Hearts, Ace), IllegalMove);
-remove_card ([(Hearts,Ace),(Clubs, Num 5),(Hearts, Ace),(Hearts,Ace),
-              (Diamonds, Queen)], (Hearts, Ace), IllegalMove);
-remove_card ([(Clubs, Num 5),(Hearts, Ace),(Hearts,Ace),
-              (Diamonds, Queen)], (Hearts, Ace), IllegalMove);
-*)
-(*  mostly works - but found is returning the 0 unless
-    found on first list memember then 1
-fun remove_card (cs: card list, c: card, e: exn)=
-  let fun getem (cs': card list, found: int)=
-   (  print("found " ^ Int.toString(found) ^ "\n");      
-      case cs' of [] => ([], found) 
-        | h::t  => 
-           if c=h then
-              (if found=0 then getem(t, found + 1)
-               else ((h ::
-                 ( case getem(t, found+1) of (a,_) => a)), found+1))
-           else ((h::(case getem(t, found) of (a,_) => a)),found) )
-  in
-      getem(cs, 0)
-  end;
-*)
 (* works!
 fun remove_card (cs: card list, c: card, e: exn)=
   case cs of [] => [] 
           | h::t  => if c=h then remove_card(t,c,e)
                      else h :: remove_card(t,c,e); *)
+
+(* (2d) all_same_color takes a list of cards and returns true if all
+the cards in the list are the same color. *)
+
+fun all_same_color(cs: card list)=
+  case cs of [] => true
+          | _::[]  => true
+          | h::(t::r)  => if card_color(h) <> card_color(t) then false
+                     else all_same_color(t::r);
+
+
+(* (2e) Write a function sum_cards, which takes a list of cards and
+returns the sum of their values. Use a locally defined helper function
+that is tail recursive. *)
+
+fun sum_cards(cs: card list)=
+  let fun addem(cs', total) =
+      case cs' of [] => total
+         | h::t => addem(t, total + card_value(h))
+  in
+      addem(cs, 0)
+  end
+
+(* (2f) score takes a card list (the held-cards) and an int (the goal)
+and computes the score as described above. *)
+
+fun score(cs: card list,  goal: int )=
+  42;

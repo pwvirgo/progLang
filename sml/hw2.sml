@@ -118,5 +118,50 @@ elements of cs except c. If c is in the list more than once, remove
 only the first one. If c is not in the list, raise the exception
 e. You can compare cards with =. *)
 
-fun remove_card (cs: card list, c: card, e: exception)=
-42;
+fun remove_card (cs: card list, c: card, e: exn)=
+  let fun getem (cs': card list, found: int)=
+      case cs' of [] => ([], found) 
+        | h::t  => 
+           if c=h then
+              (if found=0 then 
+                   (case getem(t, found + 1) of (a,f)=> (a,f))
+               else (case getem(t,found+1) of (a,f) => (h::a, f)))
+           else (case getem(t,found) of (a,f) => (h::a, f))
+  in
+      case getem(cs, 0) of (a,f) =>  if f=0 then raise e else a
+  end;
+
+(*
+remove_card ([(Hearts, Ace)], (Hearts, Ace), IllegalMove);
+(* remove_card ([(Hearts, Ace)], (Spades, Ace), IllegalMove) 
+             handle IllegalMove => true; *)
+remove_card ([(Clubs, Num 5),(Hearts, Ace),(Diamonds, Queen)],
+             (Hearts, Ace), IllegalMove) ;
+remove_card ([(Clubs, Num 5 ),(Hearts, Ace),(Hearts,Ace),
+              (Diamonds, Queen)], (Hearts, Ace), IllegalMove);
+remove_card ([(Hearts,Ace),(Clubs, Num 5),(Hearts, Ace),(Hearts,Ace),
+              (Diamonds, Queen)], (Hearts, Ace), IllegalMove);
+remove_card ([(Clubs, Num 5),(Hearts, Ace),(Hearts,Ace),
+              (Diamonds, Queen)], (Hearts, Ace), IllegalMove);
+*)
+(*  mostly works - but found is returning the 0 unless
+    found on first list memember then 1
+fun remove_card (cs: card list, c: card, e: exn)=
+  let fun getem (cs': card list, found: int)=
+   (  print("found " ^ Int.toString(found) ^ "\n");      
+      case cs' of [] => ([], found) 
+        | h::t  => 
+           if c=h then
+              (if found=0 then getem(t, found + 1)
+               else ((h ::
+                 ( case getem(t, found+1) of (a,_) => a)), found+1))
+           else ((h::(case getem(t, found) of (a,_) => a)),found) )
+  in
+      getem(cs, 0)
+  end;
+*)
+(* works!
+fun remove_card (cs: card list, c: card, e: exn)=
+  case cs of [] => [] 
+          | h::t  => if c=h then remove_card(t,c,e)
+                     else h :: remove_card(t,c,e); *)

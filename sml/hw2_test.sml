@@ -43,9 +43,22 @@ val test6b = card_value (Diamonds, Jack) = 10
 val test6c = card_value (Spades, Ace) = 11
 
 
-(*
-val test7 = remove_card ([(Hearts, Ace)], (Hearts, Ace), IllegalMove) = []
 
+val test7a = remove_card ([(Hearts, Ace)],
+                          (Hearts, Ace), IllegalMove)=[]
+(* remove_card ([(Hearts, Ace)], (Spades, Ace), IllegalMove) 
+             handle IllegalMove => [(Hearts, Num 99)] *)
+val test7b = remove_card ([(Clubs, Num 5),(Hearts, Ace),
+        (Diamonds, Queen)], (Hearts, Ace), IllegalMove) =
+        [(Clubs, Num 5),(Diamonds,Queen)]
+val test7c=remove_card ([(Clubs, Num 5 ),(Hearts, Ace),(Hearts,Ace),
+              (Diamonds, Queen)], (Hearts, Ace), IllegalMove) 
+     = [(Clubs, Num 5),(Hearts,Ace), (Diamonds,Queen)]
+(* val test7c=remove_card ([],(Clubs, Num 6),IllegalMove)=
+[(Clubs,Num 6)] - uncaught exception *)
+
+
+(*
 val test8 = all_same_color [(Hearts, Ace), (Hearts, Ace)] = true
 
 val test9 = sum_cards [(Clubs, Num 2),(Clubs, Num 2)] = 4

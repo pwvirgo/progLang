@@ -131,11 +131,6 @@ fun remove_card (cs: card list, c: card, e: exn)=
       case getem(cs, 0) of (a,f) =>  if f=0 then raise e else a
   end;
 
-(* works!
-fun remove_card (cs: card list, c: card, e: exn)=
-  case cs of [] => [] 
-          | h::t  => if c=h then remove_card(t,c,e)
-                     else h :: remove_card(t,c,e); *)
 
 (* (2d) all_same_color takes a list of cards and returns true if all
 the cards in the list are the same color. *)
@@ -163,4 +158,28 @@ fun sum_cards(cs: card list)=
 and computes the score as described above. *)
 
 fun score(cs: card list,  goal: int )=
-  42;
+  let val sum = sum_cards(cs)
+      val prescore= if sum> goal then (sum - goal) * 3
+                                 else goal - sum
+  in
+      if all_same_color(cs) then prescore div 2
+                            else prescore
+  end
+
+
+fun officiate(cs: card list, ms: move list, goal: int) =
+  let fun play(cs', ms', hand) =
+     if sum_cards(hand) > goal then score (hand, goal)
+     else (
+         case ms' of [] => score (hand, goal)
+           | Draw::tlm  => 
+                ( case cs' of [] => score (hand, goal)
+                  | hdc::tlc  => play(tlc, tlm, hdc::hand) )
+           | Discard(s,v)::tlm => 
+               play(cs', tlm, remove_card(hand, (s,v),
+                                  IllegalMove))
+    )
+  in
+     play (cs, ms, [])
+  end
+

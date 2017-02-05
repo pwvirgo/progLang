@@ -20,6 +20,15 @@ is not in it. You may assume the string is in the list at most
 once. Use same_string, provided to you, to compare strings. Sample
 solution is around 8 lines. *)
 
+fun all_except_option(s:string, sl: string list) =
+  case sl of [] => NONE
+             | h::t  => 
+               if same_string(s, h) then SOME t
+               else case all_except_option(s, t) of 
+                        NONE=>NONE
+                     |  SOME y => SOME (h::y)               
+
+(* my solution was below but more complecated than above 
 fun all_except_option(s: string, sl: string list) =
   let 
     fun getString(found: bool, sl2: string list) =
@@ -32,6 +41,7 @@ fun all_except_option(s: string, sl: string list) =
       case getString(false, sl)  of (found, lst) =>
            if found then SOME lst  else  NONE 
   end;
+*)
 
 (* (1b) Write a function get_substitutions1, which takes a string
 list list (a list of list of strings, the substitutions) and a
@@ -54,7 +64,8 @@ fun get_substitutions2(x: string list list, s: string) =
   let fun gets(x2: string list list, ret: string list) =
       case x2 of [] => ret
           | h::t  => 
-             gets(t, ret @ (case all_except_option(s, h) of NONE  => []
+             gets(t, (case all_except_option(s, h) of
+                    NONE=>ret  
                   | SOME lst => lst))
   in
       gets(x, [])

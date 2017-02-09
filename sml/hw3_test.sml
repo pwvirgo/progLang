@@ -50,18 +50,42 @@ val test8a = all_answers (fn x => if x = 1 then SOME [x] else NONE) [2,3,4,5,6,7
 
 val test8b = all_answers (fn x => if x = 6 then SOME [x] else NONE) [2,3,4,5,6,7] = NONE
 
-val test8C = all_answers (fn x => if x>0 then SOME [x] else NONE) [2,3,4,5,6,7] = NONE
+val test8C = all_answers (fn x => if x>0 then SOME [x] else NONE) [2,3,4,5,6,7] = SOME [2,3,4,5,6,7]
 
+val test8d = all_answers (fn x => if x>0 then SOME [x] else NONE) [] = SOME []
+
+
+val test9aa = count_wildcards Wildcard = 1
+val test9ab = count_wildcards (TupleP[Wildcard, Wildcard, Variable("12345")]) =2
+val test9ac = count_wildcards (ConstP(23))  = 0
+
+val test9ba = count_wild_and_variable_lengths (Variable("a")) = 1
+val test9bb = count_wild_and_variable_lengths (TupleP[Wildcard,
+     Wildcard, Variable("12345")]) =7
+
+
+val test9ca = count_some_var ("x", Variable("x")) = 1
+val test9cb = count_some_var ("x", Wildcard) = 0
+val test9cc = count_some_var ("zo", TupleP([Variable("x"),
+      Variable("zo"), Wildcard, Variable("zo")])) = 2
+val test9cd = count_some_var ("zo", ConstructorP("zo",Wildcard)) = 0
+val test9ce = count_some_var ("z", TupleP([ConstructorP("z",Wildcard),
+ ConstructorP("z",Variable("z"))])) = 1
+
+
+(* testing function  davai when check_pat was only davai
+val test10a = check_pat (Variable("x"))
+val test10b = check_pat (TupleP([Variable("y"),
+         ConstructorP("z",Variable("q")),
+                Variable("x"),Variable("zz"),Variable("x")])) *)
+
+
+val test10a = check_pat (Variable("x")) = true
+val test10b = check_pat (TupleP([Variable("x"),Variable("y")])) = true
+val test10c = check_pat (TupleP([Variable("x"),Variable("y"),
+                        ConstructorP("z",Variable("x"))])) = false
 
 (*
-val test9a = count_wildcards Wildcard = 1
-
-val test9b = count_wild_and_variable_lengths (Variable("a")) = 1
-
-val test9c = count_some_var ("x", Variable("x")) = 1
-
-val test10 = check_pat (Variable("x")) = true
-
 val test11 = match (Const(1), UnitP) = NONE
 
 val test12 = first_match Unit [UnitP] = SOME []

@@ -116,6 +116,58 @@ fun all_answers f lst =
   let fun loop lst' acc =
      case lst' of [] => SOME  acc
             | h::t  => ( case f(h) of NONE =>  NONE
-                         | SOME x  => loop t (x @ acc) )
+                         | SOME x  => loop t (acc @ x) )
   in loop lst [] end
+
+(* (9a) Use g to define a function count_wildcards that takes a
+pattern and returns how many Wildcard patterns it contains. *)
+
+fun count_wildcards(pat) =  g (fn x => 1) (fn x => 0) pat 
+
+(* (9b) Use g to define a function count_wild_and_variable_lengths that
+takes a pattern and returns the number of Wildcard patterns it
+contains plus the sum of the string lengths of all the variables in
+the variable patterns it contains. (Use String.size. We care only
+about variable names; the constructor names are not relevant.) *)
+
+fun count_wild_and_variable_lengths(pat) =
+   g (fn x => 1) (fn x =>String.size(x)) pat
+
+(* (9c) Use g to define a function count_some_var that takes a string
+and a pattern (as a pair) and returns the number of times the string
+appears as a variable in the pattern. We care only about variable
+names; the constructor names are not relevant. *)
+
+fun count_some_var(str, pat) =
+   g (fn x => 0) (fn x=> if str = x then 1 else 0) pat
+
+(* 10. check_pat that takes a pattern and returns true if and only if
+all the variables appearing in the pattern are distinct from each
+other (i.e., use different strings). *)
+
+fun check_pat p =
+  let fun davai (p1) =
+        case p1 of Variable x => [x] 
+          | TupleP ps  => foldl(fn (a,b) => (davai a) @ b) [] ps
+          | ConstructorP(_,p)  => davai(p)
+          | _  => []
+      fun drugoi l =
+        case l of [] => true
+          | h::t  => if (List.exists (fn x=> h=x)  t) then false
+                     else drugoi t
+  in 
+      (drugoi o davai) p
+  end
+
+
+(* 11. function match that takes a valu * pattern and returns a
+(string * valu) list option, namely NONE if the pattern does not match
+and SOME lst where lst is the list of bindings if it does. Note that
+if the value matches but the pattern has no patterns of the form
+Variable s, then the result is SOME []. Hints: Sample solution has one
+case expression with 7 branches. The branch for tuples uses
+all_answers and ListPair.zip. Sample solution is 13 lines. Remember to
+look above for the rules for what patterns match what values, and what
+bindings they produce. These are hints: We are not requiring
+all_answers and ListPair.zip here, but they make it easier. *)
 

@@ -5,7 +5,8 @@
 ;; These are tests that use a little graphics to make the assignment more fun.
 
 ;; Be sure to put your homework file in the same folder as this test file.
-;; Uncomment the line below and change HOMEWORK_FILE to the name of your homework file.
+;; Uncomment the line below and change HOMEWORK_FILE to the name of your
+;; homework file.
 
 (require "hw4.rkt")
 
